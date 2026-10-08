@@ -838,6 +838,10 @@ footer b{color:var(--ink);display:block;margin-bottom:8px}
         <p class="err" id="err" hidden></p>
         <button class="btn btn-main" type="submit">Получить подборку <span class="arr">→</span></button>
         <p class="note">Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>
+        <div class="done" id="sent" hidden>
+          <h3>Заявка отправлена</h3>
+          <p>Спасибо! Я свяжусь с вами в ближайшее время и пришлю варианты под ваш бюджет. Если удобнее, напишите мне сразу в Telegram: <span class="mono">@DobryninaNatalya</span></p>
+        </div>
         <div class="done" id="done" hidden>
           <h3>Почти готово</h3>
           <p>Скопируйте заявку и отправьте мне в Telegram – отвечу и пришлю варианты.</p>
@@ -945,7 +949,8 @@ footer b{color:var(--ink);display:block;margin-bottom:8px}
     addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(upd)}},{passive:true});upd();
   })();
 
-  // form
+  // form: заявки приходят на почту через FormSubmit
+  var LEAD_EMAIL='gorod-b@mail.ru';
   var f=document.getElementById('lead'),err=document.getElementById('err'),done=document.getElementById('done'),msg=document.getElementById('msg');
   function val(n){var el=f.querySelector('input[name="'+n+'"]:checked');return el?el.value:''}
   f.addEventListener('submit',function(e){
@@ -955,7 +960,15 @@ footer b{color:var(--ink);display:block;margin-bottom:8px}
     if(!c){err.textContent='Оставьте телефон или Telegram, чтобы я могла с вами связаться.';err.hidden=false;f.elements.contact.focus();return}
     err.hidden=true;
     msg.textContent='Здравствуйте, Наталья! Хочу подобрать объект с торгов.\nБюджет: '+b+'\nЗадача: '+g+(x?'\nОпыт торгов: '+x:'')+'\nИмя: '+(name||'–')+'\nКонтакт: '+c;
-    done.hidden=false;done.scrollIntoView({behavior:reduce?'auto':'smooth',block:'nearest'});
+    var btnS=f.querySelector('button[type=submit]'),label=btnS.innerHTML;
+    btnS.disabled=true;btnS.textContent='Отправляем…';
+    function fallback(){btnS.disabled=false;btnS.innerHTML=label;done.hidden=false;done.scrollIntoView({behavior:reduce?'auto':'smooth',block:'nearest'})}
+    fetch('https://formsubmit.co/ajax/'+LEAD_EMAIL,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({_subject:'Новая заявка с сайта: '+(name||c),_template:'table',_captcha:'false','Имя':name||'не указано','Контакт':c,'Бюджет':b,'Задача':g,'Опыт торгов':x||'не указан'})})
+    .then(function(r){return r.json()}).then(function(j){
+      if(j&&(j.success===true||j.success==='true')){btnS.innerHTML=label;btnS.disabled=false;f.querySelectorAll('fieldset,.row2,.note,button[type=submit]').forEach(function(el){el.hidden=true});var sent=document.getElementById('sent');sent.hidden=false;sent.scrollIntoView({behavior:reduce?'auto':'smooth',block:'nearest'})}
+      else fallback();
+    }).catch(fallback);
   });
   document.getElementById('copy').addEventListener('click',function(){
     var btn=this,t=msg.textContent;
