@@ -1,0 +1,966 @@
+<title>Наталья Добрынина – недвижимость с торгов</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: airy white landing; one orange accent; motion = hero load sequence, scroll reveals, live "auction" price card, location marquee */
+:root{
+  --bg:#FFFFFF; --soft:#F6F5F1; --ink:#151515; --muted:#6D6C66; --line:#ECEBE6;
+  --orange:#F26A1B; --orange-soft:#FFF0E6; --sun:#FFD338; --ok:#3F7A3A; --green:#5B7F45; --green-deep:#24392B; --green-soft:#EEF3E6; --green-mid:#C9D9B5; --plan:#B4610A;
+  --ph:#F3F2EE; --ph-stripe:#ECEBE5;
+  --f-display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --f-body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:20px; --ease:cubic-bezier(.2,.8,.2,1);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font:400 17px/1.6 var(--f-body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--orange);outline-offset:3px;border-radius:8px}
+.wrap{max-width:1200px;margin:0 auto;padding-inline:clamp(16px,4vw,40px)}
+section{padding-block:clamp(64px,10vw,128px)}
+h1,h2,h3{font-family:var(--f-display);line-height:1.06;margin:0;text-wrap:balance;letter-spacing:-.02em}
+h2{font-size:clamp(30px,4.6vw,54px);font-weight:700}
+h3{font-size:clamp(18px,1.9vw,21px);font-weight:700;letter-spacing:-.01em}
+p{margin:0}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font:500 12px/1 var(--f-mono);text-transform:uppercase;letter-spacing:.14em;color:var(--muted)}
+.eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--orange)}
+.lead{font-size:clamp(17px,1.6vw,20px);color:var(--muted);max-width:58ch}
+.head{display:grid;gap:18px;margin-bottom:clamp(36px,5vw,64px);max-width:800px}
+.accent{color:var(--orange)}
+
+/* buttons */
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;font:700 16px/1 var(--f-body);padding:19px 28px;border-radius:999px;text-decoration:none;border:1.5px solid transparent;cursor:pointer;overflow:hidden;isolation:isolate;transition:transform .3s var(--ease),box-shadow .3s var(--ease),color .3s}
+.btn-main{background:var(--ink);color:#fff}
+.btn-main::before{content:"";position:absolute;inset:0;background:var(--orange);border-radius:inherit;transform:translateY(101%);transition:transform .45s var(--ease);z-index:-1}
+.btn-main:hover::before{transform:none}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px rgba(242,106,27,.55)}
+.btn-ghost{border-color:var(--line);background:#fff;color:var(--ink)}
+.btn-ghost:hover{border-color:var(--ink);transform:translateY(-2px)}
+.btn .arr{transition:transform .3s var(--ease)}
+.btn:hover .arr{transform:translateX(4px)}
+
+/* progress + header */
+.progress{position:fixed;top:0;left:0;right:0;height:3px;background:var(--orange);transform-origin:0 50%;transform:scaleX(0);z-index:40}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:rgba(255,255,255,.82);backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);transition:box-shadow .3s}
+.top.scrolled{box-shadow:0 1px 0 var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:16px}
+.logo{font:800 15px/1.1 var(--f-display);text-decoration:none;display:flex;align-items:center;gap:10px;letter-spacing:-.01em}
+.logo i{width:32px;height:32px;border-radius:50%;background:var(--orange);display:grid;place-items:center;color:#fff;font-style:normal;font-size:14px}
+.nav{display:flex;gap:28px;font-weight:600;font-size:15px}
+.nav a{text-decoration:none;color:var(--muted);position:relative;transition:color .2s}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:2px;background:var(--orange);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
+.nav a:hover{color:var(--ink)}.nav a:hover::after{transform:none}
+.top .btn{padding:13px 20px;font-size:14px}
+@media (max-width:920px){.nav{display:none}}
+
+/* hero */
+.hero{padding-block:clamp(36px,6vw,80px) clamp(48px,7vw,96px);position:relative}
+.hero .wrap{display:grid;grid-template-columns:1.2fr .95fr;gap:clamp(28px,5vw,72px);align-items:center}
+.hero-text{display:grid;gap:28px;min-width:0}
+.hero h1{font-size:clamp(32px,5.4vw,68px);font-weight:800;line-height:1.02}
+.hero h1 .line{white-space:nowrap}
+.line{display:block;overflow:hidden;padding-bottom:.06em}
+.line>span{display:inline-block;animation:rise 1s var(--ease) both}
+.line:nth-child(2)>span{animation-delay:.12s}.line:nth-child(3)>span{animation-delay:.24s}
+@keyframes rise{from{transform:translateY(105%)}to{transform:none}}
+.underline{position:relative;white-space:nowrap}
+.underline svg{position:absolute;left:-2%;width:104%;bottom:-.12em;height:.32em;overflow:visible}
+.underline path{fill:none;stroke:var(--orange);stroke-width:6;stroke-linecap:round;stroke-dasharray:420;stroke-dashoffset:420;animation:draw 1.1s .9s var(--ease) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.fade{animation:fadeup .9s var(--ease) both}
+.d1{animation-delay:.4s}.d2{animation-delay:.55s}.d3{animation-delay:.7s}.d4{animation-delay:.85s}
+@keyframes fadeup{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line);padding-top:24px}
+.stats b{display:block;font:700 clamp(24px,2.7vw,34px)/1 var(--f-display);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.stats span{font-size:13px;color:var(--muted);line-height:1.35;display:block;margin-top:8px}
+@media (max-width:520px){.stats{grid-template-columns:1fr 1fr;row-gap:20px}}
+
+.hero-visual{position:relative;min-width:0}
+.hero-visual .ph{aspect-ratio:4/5;border-radius:28px}
+.blob{position:absolute;inset:8% -6% -4% 10%;background:radial-gradient(closest-side,var(--orange-soft),transparent);z-index:-1;animation:breathe 7s ease-in-out infinite}
+@keyframes breathe{50%{transform:scale(1.08) translate(-2%,2%)}}
+.float{position:absolute;background:#fff;border-radius:18px;box-shadow:0 24px 60px -20px rgba(20,20,20,.28),0 0 0 1px var(--line);padding:16px 18px}
+.price-card{left:-38px;bottom:42px;width:248px;display:grid;gap:10px;animation:fadeup .9s .9s var(--ease) both,bob 6s 2s ease-in-out infinite}
+.price-card small{font:500 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between}
+.live{display:inline-flex;align-items:center;gap:6px;color:var(--ok)}
+.live::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 1.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(31,138,76,.5)}100%{box-shadow:0 0 0 8px rgba(31,138,76,0)}}
+.pc-row{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;color:var(--muted)}
+.pc-row s{text-decoration:none;position:relative;font:500 15px/1 var(--f-mono)}
+.pc-row s::after{content:"";position:absolute;left:-2px;right:-2px;top:50%;height:2px;background:var(--orange);transform:scaleX(0);transform-origin:left;animation:strike .6s 1.8s var(--ease) forwards}
+@keyframes strike{to{transform:scaleX(1)}}
+.pc-price{font:700 26px/1 var(--f-display);color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.pc-save{font:600 13px/1 var(--f-body);color:var(--orange);background:var(--orange-soft);padding:7px 10px;border-radius:999px;justify-self:start}
+.tag-card{right:-14px;top:36px;font:700 14px/1.3 var(--f-body);max-width:210px;background:var(--sun);box-shadow:0 20px 50px -20px rgba(20,20,20,.3);transform:rotate(3deg);animation:fadeup .9s 1.1s var(--ease) both,bob 7s 2.5s ease-in-out infinite reverse}
+.tag-card small{display:block;font:500 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;opacity:.65}
+@keyframes bob{50%{translate:0 -10px}}
+@media (max-width:880px){.hero .wrap{grid-template-columns:1fr}.hero-visual{max-width:440px;margin-inline:auto;width:100%}.price-card{left:-8px}.tag-card{right:-6px}}
+@media (max-width:440px){.price-card{width:220px;bottom:18px}.hero-visual .tag-card{max-width:170px;bottom:44%;right:-6px}}
+
+/* marquee */
+.marquee{border-block:1px solid var(--line);overflow:hidden;padding-block:20px;background:#fff}
+.track{display:flex;width:max-content;animation:scroll 38s linear infinite}
+.marquee:hover .track{animation-play-state:paused}
+.track span{display:inline-flex;align-items:center;gap:28px;padding-right:28px;font:700 clamp(18px,2vw,24px)/1 var(--f-display);white-space:nowrap;letter-spacing:-.01em}
+.track span::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--orange)}
+.track span:nth-child(even){color:var(--muted);font-weight:500}
+@keyframes scroll{to{transform:translateX(-50%)}}
+
+/* scroll reveals (visible by default; animate only where scroll timelines exist) */
+@supports (animation-timeline:view()){
+  .rv{animation:reveal linear both;animation-timeline:view();animation-range:entry 0% entry 70%}
+  @keyframes reveal{from{opacity:0;transform:translateY(46px) scale(.98)}to{opacity:1;transform:none}}
+  .rv-img{animation:unveil linear both;animation-timeline:view();animation-range:entry 0% cover 35%}
+  @keyframes unveil{from{clip-path:inset(18% 10% 18% 10% round 28px)}to{clip-path:inset(0 0 0 0 round 20px)}}
+  .progress{animation:grow linear both;animation-timeline:scroll(root)}
+  @keyframes grow{to{transform:scaleX(1)}}
+  .chain-line{animation:grow-y linear both;animation-timeline:view();animation-range:cover 0% cover 70%}
+  @keyframes grow-y{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+  .bar{animation:bar linear both;animation-timeline:view();animation-range:entry 10% cover 45%}
+  @keyframes bar{from{transform:scaleY(.15)}to{transform:scaleY(1)}}
+}
+
+/* roles */
+.roles{display:grid;grid-template-columns:1.15fr 1fr;gap:18px}
+.role{border-radius:var(--r);padding:clamp(26px,3.6vw,44px);display:grid;gap:20px;align-content:start;transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
+.role:hover{transform:translateY(-6px);box-shadow:0 30px 60px -30px rgba(20,20,20,.25)}
+.role.me{background:var(--ink);color:#fff}
+.role.you{background:var(--soft)}
+.role ul{margin:0;padding:0;list-style:none;display:grid;gap:14px}
+.role li{display:flex;gap:14px;align-items:flex-start}
+.role li::before{content:"";flex:none;width:8px;height:8px;margin-top:10px;border-radius:50%;background:var(--orange)}
+.role .tag{font:500 12px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;opacity:.6}
+@media (max-width:780px){.roles{grid-template-columns:1fr}}
+
+/* steps */
+.soft{background:var(--soft)}
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;list-style:none;margin:0;padding:0;counter-reset:s}
+.steps li{counter-increment:s;background:#fff;border-radius:var(--r);padding:26px 22px;display:grid;gap:12px;align-content:start;min-width:0;position:relative;overflow:hidden;transition:transform .45s var(--ease)}
+.steps li:hover{transform:translateY(-6px)}
+.steps li::before{content:"0" counter(s);font:700 13px/1 var(--f-mono);color:var(--orange)}
+.steps li::after{content:"";position:absolute;left:0;bottom:0;height:3px;width:100%;background:var(--orange);transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
+.steps li:hover::after{transform:none}
+.steps p{font-size:15px;color:var(--muted)}
+@media (max-width:1000px){.steps{grid-template-columns:repeat(2,1fr)}.steps li:last-child{grid-column:1/-1}}
+@media (max-width:540px){.steps{grid-template-columns:1fr}}
+
+/* ladder */
+.ladder{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;align-items:end}
+.rung{border-radius:var(--r);padding:22px;display:grid;gap:10px;align-content:start;min-width:0;background:var(--soft);transform-origin:bottom;transition:background .3s,color .3s,transform .45s var(--ease)}
+.rung:hover{background:var(--orange);color:#fff;transform:translateY(-6px)}
+.rung:hover p{color:rgba(255,255,255,.85)}
+.rung:nth-child(1){min-height:220px}.rung:nth-child(2){min-height:270px}.rung:nth-child(3){min-height:320px}.rung:nth-child(4){min-height:370px}.rung:nth-child(5){min-height:420px;background:var(--ink);color:#fff}
+.rung:nth-child(5) p{color:rgba(255,255,255,.7)}
+.rung .sum{font:700 clamp(20px,2vw,26px)/1.1 var(--f-display);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.rung .what{font-weight:800}
+.rung p{font-size:14px;color:var(--muted);transition:color .3s}
+.rung .ph{aspect-ratio:1/1;padding:8px;font-size:10px;margin-top:auto;border-radius:14px;background:repeating-linear-gradient(-45deg,rgba(255,255,255,.75) 0 12px,rgba(255,255,255,.45) 12px 24px);border-color:rgba(0,0,0,.06)}
+@media (max-width:1000px){.ladder{grid-template-columns:repeat(2,1fr)}.rung{min-height:0!important}.rung:nth-child(5){grid-column:1/-1}.bar{animation:none!important}}
+@media (max-width:540px){.ladder{grid-template-columns:1fr}}
+
+/* story */
+.story{display:grid;grid-template-columns:.95fr 1.05fr;gap:clamp(28px,6vw,88px);align-items:start}
+.story-intro{display:grid;gap:24px;position:sticky;top:120px}
+.quote{font:700 clamp(21px,2.4vw,29px)/1.3 var(--f-display);letter-spacing:-.015em;position:relative;padding-top:34px}
+.quote::before{content:"“";position:absolute;top:-18px;left:-4px;font:800 90px/1 var(--f-display);color:var(--orange)}
+.quote small{display:block;font:500 14px/1.4 var(--f-body);color:var(--muted);margin-top:14px;letter-spacing:0}
+.chain{list-style:none;margin:0;padding:0 0 0 0;display:grid;gap:12px;position:relative}
+.chain-rail{position:absolute;left:19px;top:24px;bottom:24px;width:2px;background:var(--line)}
+.chain-line{position:absolute;inset:0;background:var(--orange);transform-origin:top}
+.chain li{display:grid;grid-template-columns:40px 1fr;gap:18px;align-items:start;position:relative;padding:18px 20px 18px 0;border-radius:16px;transition:background .3s}
+.chain li:hover{background:var(--soft)}
+.dot{width:40px;height:40px;border-radius:50%;background:#fff;border:2px solid var(--line);display:grid;place-items:center;font:600 12px/1 var(--f-mono);color:var(--muted);z-index:1;transition:border-color .3s,color .3s}
+.chain li:hover .dot{border-color:var(--orange);color:var(--orange)}
+.chain .t{font-weight:800;font-size:18px;display:block}
+.chain .d{font-size:15px;color:var(--muted);display:block;margin-top:4px}
+.num{font-family:var(--f-mono);font-size:14px;color:var(--ink);background:var(--orange-soft);padding:2px 8px;border-radius:6px;white-space:nowrap}
+.chain li.final{background:var(--ink);color:#fff;padding:26px 24px 26px 0;margin-top:8px}
+.chain li.final .dot{background:var(--orange);border-color:var(--orange);color:#fff}
+.chain li.final .d{color:rgba(255,255,255,.7)}
+.big{font:800 clamp(24px,3vw,34px)/1.1 var(--f-display)!important;letter-spacing:-.02em}
+@media (max-width:880px){.story{grid-template-columns:1fr}.story-intro{position:static}}
+
+/* lots */
+.lots{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.lot{background:#fff;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:grid;grid-template-rows:auto 1fr;transition:transform .5s var(--ease),box-shadow .5s var(--ease),border-color .3s}
+.lot:hover{transform:translateY(-8px);box-shadow:0 34px 60px -32px rgba(20,20,20,.3);border-color:transparent}
+.lot-img{overflow:hidden}
+.lot .ph{aspect-ratio:16/10;border-radius:0;border:0;transition:transform .8s var(--ease)}
+.lot:hover .ph{transform:scale(1.05)}
+.lot-body{padding:22px;display:grid;gap:16px;align-content:start}
+.lot-top{display:flex;justify-content:space-between;align-items:center;gap:10px;font:500 12px/1.3 var(--f-mono);letter-spacing:.04em;color:var(--muted);text-transform:uppercase}
+.pill{font:600 11px/1 var(--f-mono);letter-spacing:.06em;padding:7px 10px;border-radius:999px;text-transform:uppercase;white-space:nowrap}
+.pill.done{background:#E7F5EC;color:var(--ok)}
+.pill.work{background:#FFF1DF;color:var(--plan)}
+.proto{margin:0;display:grid;font-size:14px}
+.proto div{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--line)}
+.proto dt{color:var(--muted)}
+.proto dd{margin:0;font:500 14px/1.4 var(--f-mono);text-align:right;font-variant-numeric:tabular-nums}
+@media (max-width:1000px){.lots{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:640px){.lots{grid-template-columns:1fr}}
+
+.lot-img{position:relative;overflow:hidden;aspect-ratio:16/10}
+.lot-photo{display:block;width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease),opacity .6s var(--ease)}
+.lot:hover .lot-photo{transform:scale(1.05)}
+.lot-photo-in{position:absolute;inset:0;opacity:0}
+.lot:hover .lot-photo-in{opacity:1}
+.lot-tag{position:absolute;left:12px;bottom:12px;background:rgba(255,255,255,.92);padding:6px 12px;border-radius:999px;font:600 12px/1.2 var(--f-body)}
+.lot-type{height:100%;display:grid;place-content:center;text-align:center;gap:6px;background:var(--orange-soft);transition:background .4s}
+.lot:hover .lot-type{background:var(--orange);color:#fff}
+.lot-type b{font:800 clamp(44px,5vw,64px)/1 var(--f-display);letter-spacing:-.03em;color:var(--orange);transition:color .4s}
+.lot:hover .lot-type b{color:#fff}
+.lot-type span{font-weight:700;font-size:15px}
+.review{margin:0;padding:clamp(24px,3vw,32px);gap:22px;align-content:space-between;min-height:240px}
+.review blockquote{font:700 clamp(19px,1.8vw,23px)/1.3 var(--f-display);letter-spacing:-.01em}
+.review blockquote::before{content:"“";display:block;font:800 56px/.6 var(--f-display);color:var(--orange);margin-bottom:10px}
+.review figcaption{display:grid;gap:4px}
+.review figcaption span{font-size:14px;color:var(--muted)}
+.review-more{background:var(--ink);color:#fff}
+.review-more blockquote::before{display:none}
+.review-more .btn-ghost{justify-self:start}
+
+.more-deals{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:18px}
+.md{background:#fff;border-radius:var(--r);padding:24px;display:grid;gap:8px;align-content:start;border:1px solid var(--line);transition:transform .45s var(--ease),border-color .3s}
+.md:hover{transform:translateY(-4px);border-color:var(--orange)}
+.md b{font:800 clamp(28px,3vw,38px)/1 var(--f-display);color:var(--orange);letter-spacing:-.02em}
+.md span{color:var(--muted);font-size:15px}
+@media (max-width:760px){.more-deals{grid-template-columns:1fr}}
+
+.lot-icon{display:grid;place-items:center;aspect-ratio:16/9}
+.lot-icon.t-green{background:var(--green-soft)}
+.lot-icon.t-orange{background:var(--orange-soft)}
+.lot-icon img{width:46%;max-width:220px;height:auto;mix-blend-mode:multiply;transition:transform .6s var(--ease)}
+.lot:hover .lot-icon img{transform:translateY(-6px) scale(1.06) rotate(-3deg)}
+
+/* filter */
+.filter{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.col{border-radius:var(--r);padding:clamp(24px,3vw,38px);display:grid;gap:18px;align-content:start}
+.col.yes{background:var(--soft)}
+.col.no{border:1.5px dashed var(--line)}
+.col ul{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.col li{display:flex;gap:12px}
+.col li::before{flex:none;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;font:700 12px/1 var(--f-mono)}
+.col.yes li::before{content:"✓";background:#E7F5EC;color:var(--ok)}
+.col.no li::before{content:"✕";background:var(--soft);color:var(--muted)}
+.col.no li{color:var(--muted)}
+.motto{grid-column:1/-1;font:700 clamp(24px,3.4vw,40px)/1.2 var(--f-display);letter-spacing:-.02em;padding-top:28px;max-width:22ch}
+@media (max-width:780px){.filter{grid-template-columns:1fr}}
+
+/* terms */
+.terms{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(28px,5vw,72px);align-items:start}
+.prices{display:grid;gap:12px}
+.price{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:24px;border-radius:var(--r);background:#fff;transition:transform .4s var(--ease)}
+.price:hover{transform:translateX(6px)}
+.price{justify-content:flex-start}
+.price::before{content:"✓";flex:none;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--orange);color:#fff;font:700 12px/1 var(--f-mono)}
+.price span{color:var(--ink);font-size:16px;font-weight:600}
+.price b{font:700 clamp(19px,2vw,25px)/1.1 var(--f-display);white-space:nowrap;letter-spacing:-.02em}
+.facts{display:grid;gap:12px}
+.facts div{display:flex;gap:12px;align-items:flex-start;font-size:15px;font-weight:600}
+.facts div::before{content:"✓";flex:none;display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--orange);color:#fff;font:700 11px/1 var(--f-mono);margin-top:1px}
+.faq details{background:#fff;border-radius:16px;padding:0 22px;margin-bottom:10px;transition:box-shadow .3s}
+.faq details[open]{box-shadow:0 18px 40px -26px rgba(20,20,20,.3)}
+summary{cursor:pointer;font-weight:700;font-size:17px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:20px}
+summary::-webkit-details-marker{display:none}
+summary i{flex:none;width:30px;height:30px;border-radius:50%;background:var(--soft);position:relative;transition:background .3s,transform .4s var(--ease)}
+summary i::before,summary i::after{content:"";position:absolute;left:50%;top:50%;width:12px;height:2px;background:var(--ink);translate:-50% -50%;transition:background .3s}
+summary i::after{rotate:90deg}
+details[open] summary i{background:var(--orange);transform:rotate(45deg)}
+details[open] summary i::before,details[open] summary i::after{background:#fff}
+.ans{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s var(--ease)}
+details[open] .ans{grid-template-rows:1fr}
+.ans>div{overflow:hidden}
+.ans p{color:var(--muted);font-size:15px;max-width:62ch;padding-bottom:20px}
+@media (max-width:880px){.terms{grid-template-columns:1fr}}
+
+/* reviews */
+.reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.review{border-radius:var(--r);background:var(--soft);padding:22px;display:grid;gap:16px;align-content:start;transition:transform .45s var(--ease)}
+.review:nth-child(2){transform:translateY(28px)}
+.review:hover{transform:translateY(-6px)}
+.review .ph{aspect-ratio:9/12;background:repeating-linear-gradient(-45deg,#fff 0 14px,#FAF9F6 14px 28px)}
+.review blockquote{margin:0;font-size:17px;font-weight:700}
+.review cite{font-style:normal;font-size:14px;color:var(--muted)}
+@media (max-width:880px){.reviews{grid-template-columns:1fr 1fr}.review:nth-child(2){transform:none}}
+@media (max-width:560px){.reviews{grid-template-columns:1fr}}
+
+/* photos */
+.photo{display:block;width:100%;max-width:100%;height:auto;border-radius:var(--r);object-fit:cover;background:var(--soft)}
+.hero-stage{position:relative;display:grid;align-items:end}
+.hero-bg{position:absolute;left:0;right:0;bottom:0;top:16%;border-radius:28px;background:linear-gradient(160deg,#FFE7D6 0%,var(--orange-soft) 55%,#FFD9BF 100%);overflow:hidden}
+.hero-bg::after{content:"";position:absolute;width:70%;aspect-ratio:1;border-radius:50%;right:-18%;top:-22%;background:var(--sun);opacity:.55;animation:breathe 8s ease-in-out infinite}
+.hero-visual .tag-card{top:auto;bottom:40%;right:-22px}
+.hero-cut{position:relative;display:block;width:100%;height:auto;filter:drop-shadow(0 30px 40px rgba(120,50,0,.18));animation:cutin 1.1s .3s var(--ease) both;transform-origin:50% 100%}
+@keyframes cutin{from{opacity:0;transform:translateY(30px) scale(.97)}to{opacity:1;transform:none}}
+.roles{grid-template-columns:.75fr 1.15fr 1fr}
+.roles-img{aspect-ratio:4/5;height:100%;transition:transform .6s var(--ease)}
+.roles-img:hover{transform:scale(1.02)}
+@media (max-width:1000px){.roles{grid-template-columns:1fr 1fr}.roles-img{grid-column:1/-1;aspect-ratio:16/10;object-position:50% 25%}}
+@media (max-width:780px){.roles{grid-template-columns:1fr}}
+.life{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.life-item{margin:0;position:relative;overflow:hidden;border-radius:var(--r)}
+.life-item img{aspect-ratio:4/3;border-radius:0;transition:transform 1s var(--ease)}
+.life-item:hover img{transform:scale(1.06)}
+.life-item figcaption{position:absolute;left:14px;bottom:14px;background:rgba(255,255,255,.92);backdrop-filter:blur(6px);padding:8px 14px;border-radius:999px;font-weight:700;font-size:14px}
+.life-item:nth-child(2){transform:translateY(32px)}
+.life-note{font:700 clamp(22px,3vw,34px)/1.2 var(--f-display);letter-spacing:-.02em;margin-top:clamp(48px,6vw,72px);max-width:24ch}
+@media (max-width:760px){.life{grid-template-columns:1fr 1fr}.life-item:nth-child(2){transform:none}.life-item:last-child{grid-column:1/-1}}
+@media (max-width:460px){.life{grid-template-columns:1fr}}
+.ico{width:72px;height:72px;object-fit:contain;mix-blend-mode:multiply;transition:transform .5s var(--ease)}
+.steps li:hover .ico{transform:translateY(-4px) rotate(-6deg) scale(1.08)}
+.steps li::before{position:absolute;top:22px;right:22px}
+.rung-img{width:100%;max-width:100%;aspect-ratio:1/1;object-fit:contain;margin-top:auto;transition:transform .6s var(--ease)}
+.rung:hover .rung-img{transform:translateY(-6px) scale(1.06) rotate(-2deg)}
+.filter{grid-template-columns:.8fr 1fr 1fr}
+.filter-photo{margin:0;grid-row:span 1;position:relative}
+.filter-photo img{aspect-ratio:4/5;height:100%}
+.filter-photo figcaption{position:absolute;left:14px;right:14px;bottom:14px;background:rgba(255,255,255,.92);padding:10px 14px;border-radius:14px;font-weight:700;font-size:14px}
+@media (max-width:1000px){.filter{grid-template-columns:1fr 1fr}.filter-photo{grid-column:1/-1}.filter-photo img{aspect-ratio:16/10;object-position:50% 20%}}
+@media (max-width:780px){.filter{grid-template-columns:1fr}}
+.about-img{aspect-ratio:4/5;border-radius:28px}
+@media (max-width:840px){.about-img{max-width:400px}}
+.avatar{object-fit:cover;border:3px solid rgba(255,255,255,.9);padding:0}
+
+/* guide */
+.guide{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(28px,5vw,72px);align-items:center;background:var(--orange-soft);border-radius:32px;padding:clamp(28px,5vw,64px)}
+.guide-cover{display:grid;place-items:center;perspective:1200px}
+.book{position:relative;width:min(100%,280px);aspect-ratio:3/4;background:var(--orange);color:#fff;border-radius:6px 18px 18px 6px;padding:28px 24px;display:flex;flex-direction:column;gap:14px;box-shadow:inset 10px 0 0 rgba(0,0,0,.12),0 40px 70px -30px rgba(160,60,0,.6);transform:rotateY(-14deg) rotateX(4deg);transition:transform .7s var(--ease);overflow:hidden}
+.guide:hover .book{transform:rotateY(-4deg) rotateX(0) translateY(-6px)}
+.book-tag{font:500 11px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;opacity:.85}
+.book-title{font:800 clamp(22px,2.4vw,28px)/1.1 var(--f-display);letter-spacing:-.02em}
+.book-author{margin-top:auto;font-weight:700;font-size:14px}
+.book-dot{position:absolute;width:160px;height:160px;border-radius:50%;background:var(--sun);right:-50px;bottom:-50px;opacity:.9;animation:breathe 6s ease-in-out infinite}
+.guide-text{display:grid;gap:18px;min-width:0}
+.guide-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.guide-list li{display:flex;gap:12px;font-weight:600}
+.guide-list li::before{content:"✓";flex:none;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#fff;color:var(--orange);font:700 12px/1 var(--f-mono)}
+@media (max-width:820px){.guide{grid-template-columns:1fr}.book{width:220px}}
+
+/* about */
+.about{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(28px,6vw,88px);align-items:center}
+.about .ph{aspect-ratio:4/5;border-radius:28px}
+.about-text{display:grid;gap:20px;min-width:0}
+.about-text p{max-width:60ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{font-size:14px;font-weight:600;padding:9px 15px;border-radius:999px;background:var(--soft);transition:background .3s,color .3s}
+.chips span:hover{background:var(--orange);color:#fff}
+.note{font-size:13px;color:var(--muted)}
+@media (max-width:840px){.about{grid-template-columns:1fr}.about .ph{max-width:400px}}
+
+/* apply */
+.apply-box{background:var(--ink);color:#fff;border-radius:32px;padding:clamp(28px,5vw,72px);display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(28px,5vw,64px);align-items:start;position:relative;overflow:hidden}
+.apply-box::before{content:"";position:absolute;width:520px;height:520px;right:-180px;top:-220px;border-radius:50%;background:radial-gradient(closest-side,rgba(242,106,27,.55),transparent);animation:breathe 9s ease-in-out infinite;pointer-events:none}
+.apply-intro{display:grid;gap:22px;position:relative}
+.apply-intro .eyebrow{color:rgba(255,255,255,.6)}
+.apply-intro .lead{color:rgba(255,255,255,.72)}
+.avatar{width:120px;height:120px;border-radius:50%;background:repeating-linear-gradient(-45deg,rgba(255,255,255,.14) 0 10px,rgba(255,255,255,.06) 10px 20px);border:1px dashed rgba(255,255,255,.35);display:grid;place-items:center;text-align:center;font:500 10px/1.3 var(--f-mono);color:rgba(255,255,255,.7);padding:10px}
+.form{background:#fff;color:var(--ink);border-radius:24px;padding:clamp(22px,3vw,34px);display:grid;gap:22px;position:relative}
+fieldset{border:0;margin:0;padding:0;display:grid;gap:10px;min-width:0}
+legend{font-weight:800;margin-bottom:10px;padding:0}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opts input{position:absolute;opacity:0;pointer-events:none}
+.opts label{padding:11px 17px;border-radius:999px;border:1.5px solid var(--line);cursor:pointer;font-size:15px;font-weight:600;background:#fff;transition:border-color .2s,background .2s,color .2s,transform .2s}
+.opts label:hover{border-color:var(--ink)}
+.opts input:checked+label{border-color:var(--orange);background:var(--orange);color:#fff;transform:scale(1.03)}
+.opts input:focus-visible+label{outline:3px solid var(--orange);outline-offset:2px}
+.field{display:grid;gap:6px}
+.field label{font-size:14px;font-weight:700}
+.field input{font:500 16px/1.4 var(--f-body);padding:15px 16px;border-radius:14px;border:1.5px solid var(--line);background:var(--soft);color:var(--ink);width:100%;transition:border-color .2s,background .2s}
+.field input:focus{outline:none;border-color:var(--orange);background:#fff}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form .btn-main{width:100%}
+.err{color:#C2410C;font-size:14px;font-weight:700}
+.done{display:grid;gap:14px;animation:fadeup .6s var(--ease) both}
+.done pre{white-space:pre-wrap;font:400 14px/1.5 var(--f-mono);background:var(--soft);border-radius:14px;padding:16px;margin:0;user-select:all}
+.done .actions{display:flex;flex-wrap:wrap;gap:10px}
+.done .btn{padding:15px 20px;font-size:15px}
+@media (max-width:880px){.apply-box{grid-template-columns:1fr}}
+@media (max-width:480px){.row2{grid-template-columns:1fr}}
+
+/* placeholders */
+.ph{width:100%;max-width:100%;border-radius:var(--r);background:repeating-linear-gradient(-45deg,var(--ph) 0 14px,var(--ph-stripe) 14px 28px);display:grid;place-items:center;text-align:center;padding:20px;color:var(--muted);font:500 12px/1.45 var(--f-mono);border:1px dashed #DAD8D0}
+.ph b{display:block;font-weight:500;color:var(--ink);margin-bottom:4px;letter-spacing:.06em;text-transform:uppercase}
+
+/* footer */
+footer{padding-block:56px 40px}
+footer .wrap{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:28px;font-size:14px;color:var(--muted)}
+footer b{color:var(--ink);display:block;margin-bottom:8px}
+.disc{grid-column:1/-1;font-size:12px;border-top:1px solid var(--line);padding-top:22px}
+.mono{font-family:var(--f-mono)}
+@media (max-width:760px){footer .wrap{grid-template-columns:1fr}}
+
+
+
+/* house line backdrop */
+.townscape{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.townscape .row{position:absolute;left:0;height:var(--h);width:max-content;will-change:transform}
+.townscape svg{display:block;height:100%;width:auto;overflow:visible}
+.townscape path{fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1;animation:drawline 2.6s var(--ease) forwards}
+@keyframes drawline{to{stroke-dashoffset:0}}
+.townscape .r1 path{stroke:var(--green);opacity:.16}
+.townscape .r2 path{stroke:var(--orange);opacity:.13;animation-delay:.4s}
+.townscape .r3 path{stroke:var(--green);opacity:.11;animation-delay:.8s}
+.top,main,footer,.progress{position:relative;z-index:1}
+.top{position:sticky}.progress{position:fixed}
+@media (prefers-reduced-motion:reduce){.townscape path{stroke-dashoffset:0}}
+
+/* green accents */
+#how{background:var(--green-soft)}
+#how .eyebrow::before,#terms .eyebrow::before{background:var(--green)}
+.steps li::before{color:var(--green)}
+.steps li::after{background:linear-gradient(90deg,var(--green),var(--orange))}
+.role.me{background:var(--green-deep)}
+.role.you{background:var(--green-soft)}
+.role.me li::before{background:var(--green-mid)}
+.rung:nth-child(5){background:var(--green-deep)}
+.rung:hover{background:var(--green)}
+.col.yes{background:var(--green-soft)}
+.col.yes li::before{background:#fff;color:var(--green)}
+.facts div::before,.price::before{background:var(--green)}
+.apply-box{background:var(--green-deep)}
+.apply-box::before{background:radial-gradient(closest-side,rgba(242,106,27,.45),transparent)}
+.apply-box::after{content:"";position:absolute;width:380px;height:380px;left:-160px;bottom:-200px;border-radius:50%;background:radial-gradient(closest-side,rgba(143,180,110,.45),transparent);pointer-events:none;animation:breathe 10s ease-in-out infinite reverse}
+.review-more{background:var(--green-deep)}
+.chain li.final{background:var(--green-deep)}
+.track span:nth-child(4n+2)::after{background:var(--green)}
+.md:hover{border-color:var(--green)}
+.chips span:nth-child(even):hover{background:var(--green)}
+.hero-bg::before{content:"";position:absolute;width:38%;aspect-ratio:1;border-radius:50%;left:-10%;bottom:-12%;background:var(--green-mid);opacity:.7;animation:breathe 9s ease-in-out infinite reverse}
+.life-note .accent{color:var(--green)}
+.guide-list li::before{color:var(--green)}
+.motto .accent{background:linear-gradient(transparent 62%,var(--green-mid) 62%);color:var(--ink)}
+.btn-main:hover::before{background:var(--green)}
+.btn-main:hover{box-shadow:0 14px 30px -10px rgba(91,127,69,.55)}
+.apply-box .btn-main::before,.form .btn-main::before{background:var(--orange)}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .underline path{stroke-dashoffset:0}.pc-row s::after{transform:scaleX(1)}
+  .progress{display:none}
+}
+</style>
+
+<div class="progress" aria-hidden="true"></div>
+<div class="townscape" id="town" aria-hidden="true"></div>
+
+<header class="top" id="hdr">
+  <div class="wrap">
+    <a class="logo" href="#top"><i>Н</i>Наталья Добрынина</a>
+    <nav class="nav" aria-label="Разделы">
+      <a href="#how">Как это работает</a>
+      <a href="#start">С чего начать</a>
+      <a href="#deals">Сделки</a>
+      <a href="#terms">Вопросы</a>
+      <a href="#guide">Гайд</a>
+      <a href="#about">Обо мне</a>
+    </nav>
+    <a class="btn btn-main" href="#apply">Оставить заявку</a>
+  </div>
+</header>
+
+<main id="top">
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-text">
+      <p class="eyebrow fade">Инвестиции в недвижимость с торгов</p>
+      <h1>
+        <span class="line"><span>Деньги должны</span></span>
+        <span class="line"><span><span class="underline accent">работать.<svg viewBox="0 0 300 20" preserveAspectRatio="none" aria-hidden="true"><path d="M4 14 C 80 4, 200 4, 296 12"/></svg></span></span></span>
+        <span class="line"><span>А вы&nbsp;–&nbsp;жить.</span></span>
+      </h1>
+      <p class="lead fade d1">Покупаю недвижимость на торгах ниже рынка – для вас или как инвестицию. Нахожу объект, проверяю, считаю, торгуюсь и продаю. От вас нужно только решение и бюджет.</p>
+      <div class="hero-cta fade d2">
+        <a class="btn btn-main" href="#apply">Подобрать объект под мой бюджет <span class="arr">→</span></a>
+        <a class="btn btn-ghost" href="https://t.me/Nadobraya77" target="_blank" rel="noopener">Telegram-канал</a>
+      </div>
+      <div class="stats fade d3">
+        <div><b data-count="12" data-suffix=" лет">12 лет</b><span>в недвижимости</span></div>
+        <div><b data-count="500" data-suffix="+">500+</b><span>сделок</span></div>
+        <div><b data-count="100" data-suffix="+">100+</b><span>выкупленных лотов</span></div>
+        <div><b data-count="200" data-suffix="+">200+</b><span>клиентов</span></div>
+      </div>
+    </div>
+    <div class="hero-visual fade d2">
+      <div class="blob" aria-hidden="true"></div>
+      <div class="hero-stage"><div class="hero-bg" aria-hidden="true"></div><img class="hero-cut" src="img/portrait-hero.webp" width="900" height="1125" alt="Наталья Добрынина"></div>
+      <div class="float price-card" aria-label="Пример: квартира на торгах за 12 млн при рыночной цене 14 млн">
+        <small><span>Лот · торги</span><span class="live">идут</span></small>
+        <div class="pc-row"><span>Рынок</span><s>14 000 000 ₽</s></div>
+        <div class="pc-price"><span id="bid">12 000 000</span> ₽</div>
+        <span class="pc-save">−2 млн на ремонт</span>
+      </div>
+      <div class="float tag-card"><small>Мой принцип</small>Покупаю так, как покупала бы для себя</div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true">
+  <div class="track">
+    <span>Балашиха</span><span>торги по банкротству</span><span>Лайково</span><span>машино-места</span><span>Солманово</span><span>городские торги</span><span>Дедовск</span><span>раздел участков</span><span>Щедрино</span><span>недострой</span><span>Звенигород</span><span>флиппинг</span>
+    <span>Балашиха</span><span>торги по банкротству</span><span>Лайково</span><span>машино-места</span><span>Солманово</span><span>городские торги</span><span>Дедовск</span><span>раздел участков</span><span>Щедрино</span><span>недострой</span><span>Звенигород</span><span>флиппинг</span>
+  </div>
+</div>
+
+<!-- ROLES -->
+<section>
+  <div class="wrap">
+    <div class="head rv">
+      <p class="eyebrow">Вам не нужно становиться экспертом по торгам</p>
+      <h2>Для этого <span class="accent">есть я</span></h2>
+    </div>
+    <div class="roles">
+      <img class="photo roles-img rv" src="img/portrait-explain.webp" width="800" height="1000" alt="Наталья объясняет схему сделки" loading="lazy">
+      <div class="role me rv">
+        <p class="tag">Моя работа</p>
+        <h3>Всё, что связано со сделкой</h3>
+        <ul>
+          <li>Нахожу объекты на торгах по банкротству и городских торгах</li>
+          <li>Проверяю документы, историю и сам объект – лично выезжаю</li>
+          <li>Считаю экономику до участия: цену входа, расходы, цену продажи</li>
+          <li>Подаю заявку, торгуюсь, оформляю покупку</li>
+          <li>Готовлю объект к продаже и продаю его</li>
+        </ul>
+      </div>
+      <div class="role you rv">
+        <p class="tag">Ваша задача</p>
+        <h3>Решить, чего вы хотите</h3>
+        <ul>
+          <li>Какую сумму готовы вложить</li>
+          <li>Купить жильё для себя дешевле рынка – или чтобы деньги работали</li>
+          <li>И жить своей жизнью: работа, семья, путешествия</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIFE -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="life">
+      <figure class="life-item rv"><img class="photo" src="img/life-walk.webp" width="900" height="675" alt="Прогулка с дочерью в осеннем парке" loading="lazy"><figcaption>Время с семьёй</figcaption></figure>
+      <figure class="life-item rv"><img class="photo" src="img/life-cafe.webp" width="900" height="675" alt="Утро в кафе" loading="lazy"><figcaption>Своя жизнь и свои дела</figcaption></figure>
+      <figure class="life-item rv"><img class="photo" src="img/life-sea.webp" width="900" height="675" alt="Путешествие к морю" loading="lazy"><figcaption>Путешествия</figcaption></figure>
+    </div>
+    <p class="life-note rv">Пока вы заняты своим, ваш капитал <span class="accent">работает на торгах.</span></p>
+  </div>
+</section>
+
+<!-- HOW -->
+<section class="soft" id="how">
+  <div class="wrap">
+    <div class="head rv">
+      <p class="eyebrow">Как это работает</p>
+      <h2>Купили, оформили, продали – и дальше</h2>
+      <p class="lead">Недвижимость на торгах для меня – товар. Мы покупаем её не чтобы хранить годами, а чтобы продать и вернуть капитал в работу.</p>
+    </div>
+    <ol class="steps">
+      <li class="rv"><img class="ico" src="img/s-search.webp" width="320" height="320" alt="" loading="lazy"><h3>Подбор лота</h3><p>Обсуждаем сумму и задачу. Отбираю объекты без жильцов и сложных документов, выезжаю и смотрю.</p></li>
+      <li class="rv"><img class="ico" src="img/s-calc.webp" width="320" height="320" alt="" loading="lazy"><h3>Расчёт</h3><p>Считаю цену входа, расходы и реальную цену продажи. Ставим потолок ставки.</p></li>
+      <li class="rv"><img class="ico" src="img/s-auction.webp" width="320" height="320" alt="" loading="lazy"><h3>Торги</h3><p>Подаю заявку и торгуюсь. Если цена уходит выше потолка – останавливаемся.</p></li>
+      <li class="rv"><img class="ico" src="img/s-keys.webp" width="320" height="320" alt="" loading="lazy"><h3>Оформление</h3><p>Объект оформляется на вас. Я веду все документы до получения ключей.</p></li>
+      <li class="rv"><img class="ico" src="img/s-growth.webp" width="320" height="320" alt="" loading="lazy"><h3>Продажа</h3><p>При необходимости готовим объект и продаём по рынку. Капитал возвращается в работу.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- LADDER -->
+<section id="start">
+  <div class="wrap">
+    <div class="head rv">
+      <p class="eyebrow">С какой суммы начать</p>
+      <h2>Начать можно <span class="accent">с малого</span></h2>
+      <p class="lead">Многие мои инвесторы начинали с участка или машино-места, а потом переходили к квартирам. Ориентиры по прошлым торгам – финальная цена решается на аукционе.</p>
+    </div>
+    <div class="ladder">
+      <div class="rung bar"><span class="sum">от 30 тыс. ₽</span><span class="what">Земельный участок</span><p>Небольшие лоты в области. Первая сделка, чтобы увидеть, как всё устроено.</p><img class="rung-img" src="img/i-plot.webp" width="480" height="480" alt="Участок" loading="lazy"></div>
+      <div class="rung bar"><span class="sum">~600 тыс. ₽</span><span class="what">Машино-место</span><p>В новых ЖК, где жителям негде парковаться. Перепродажа за 1–3 месяца.</p><img class="rung-img" src="img/i-parking.webp" width="480" height="480" alt="Машино-место" loading="lazy"></div>
+      <div class="rung bar"><span class="sum">от 2,5 млн ₽</span><span class="what">Доля в квартире</span><p>Соинвестирование: покупаем квартиру вдвоём, прибыль делим по вложениям.</p><img class="rung-img" src="img/i-flat.webp" width="480" height="480" alt="Квартира в бетоне" loading="lazy"></div>
+      <div class="rung bar"><span class="sum">5–7 млн ₽</span><span class="what">Квартира целиком</span><p>Новые квартиры от застройщиков-банкротов. Для перепродажи или для себя.</p><img class="rung-img" src="img/i-keys-hand.webp" width="480" height="480" alt="Ключи от квартиры" loading="lazy"></div>
+      <div class="rung bar"><span class="sum">Проекты 50/50</span><span class="what">Дома, недострой, земля</span><p>Крупные проекты, в которые я вкладываюсь вместе с партнёром: достройка, раздел участков, перепродажа.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- STORY -->
+<section style="padding-top:0">
+  <div class="wrap story">
+    <div class="story-intro rv">
+      <p class="eyebrow">История клиентки</p>
+      <h2>Пришла с 30 тысяч – купила квартиру</h2>
+      <p class="lead">Надежда не профессиональный инвестор. Она живёт с дочерью, занимается своими делами и не сидит на торговых площадках. А её деньги всё это время работали.</p>
+      <p class="quote">Наташа, покупай так, как покупала бы для себя<small>Надежда – с этих слов начался мой главный принцип</small></p>
+    </div>
+    <div style="position:relative">
+    <div class="chain-rail" aria-hidden="true"><div class="chain-line"></div></div>
+    <ol class="chain">
+      <li class="rv"><span class="dot">1</span><div><span class="t">Участок в Калужской области</span><span class="d">Купили на торгах за <span class="num">30 000 ₽</span>, через 2 месяца продали за <span class="num">150 000 ₽</span>. Небольшая сделка, но она дала главное – доверие к системе.</span></div></li>
+      <li class="rv"><span class="dot">2</span><div><span class="t">Медынь</span><span class="d">Капитал пошёл в работу дальше.</span></div></li>
+      <li class="rv"><span class="dot">3</span><div><span class="t">Машино-место</span><span class="d">Купили, оформили, продали.</span></div></li>
+      <li class="rv"><span class="dot">4</span><div><span class="t">Участок, разделённый на части</span><span class="d">Разделили и продали по частям дороже, чем целиком.</span></div></li>
+      <li class="rv"><span class="dot">5</span><div><span class="t">Лайково → Чистопольская → снова Лайково</span><span class="d">Квартиры от застройщиков-банкротов. Деньги не лежали, а переходили из объекта в объект.</span></div></li>
+      <li class="final rv"><span class="dot">★</span><div><span class="t big">Квартира за 12 млн вместо 14</span><span class="d">И ещё 2 млн ₽ остались на ремонт. Разумная покупка – без смены образа жизни.</span></div></li>
+    </ol>
+    </div>
+  </div>
+</section>
+
+<!-- DEALS -->
+<section id="deals" class="soft">
+  <div class="wrap">
+    <div class="head rv">
+      <p class="eyebrow">Протоколы сделок</p>
+      <h2>Сделки, которые мы провели</h2>
+      <p class="lead">Показываю и победы, и отказы. На торгах важно не просто выиграть, а сохранить смысл сделки.</p>
+    </div>
+    <div class="lots">
+      <article class="lot rv">
+        <div class="lot-img lot-icon t-green"><img src="img/i-plot.webp" alt="Иконка: дом с участком" width="480" height="480" loading="lazy"><span class="lot-tag">Тот самый «дом вслепую»</span></div>
+        <div class="lot-body">
+          <div class="lot-top"><span>Дом с участком · Дедовск</span><span class="pill done">Продан</span></div>
+          <dl class="proto">
+            <div><dt>Покупка</dt><dd>5,7 млн ₽</dd></div>
+            <div><dt>Стратегия</dt><dd>раздел участка</dd></div>
+            <div><dt>Продажа</dt><dd>12 млн ₽</dd></div>
+          </dl>
+        </div>
+      </article>
+      <article class="lot rv">
+        <div class="lot-img lot-icon t-orange"><img src="img/i-flat.webp" alt="Иконка: квартира" width="480" height="480" loading="lazy"></div>
+        <div class="lot-body">
+          <div class="lot-top"><span>ЖК «Эдельвейс» · Балашиха</span><span class="pill done">Проданы</span></div>
+          <dl class="proto">
+            <div><dt>Объекты</dt><dd>квартиры, 1 корпус</dd></div>
+            <div><dt>Источник</dt><dd>банкрот-застройщик</dd></div>
+            <div><dt>Срок продажи</dt><dd>~1,5 месяца</dd></div>
+          </dl>
+        </div>
+      </article>
+      <article class="lot rv">
+        <div class="lot-img lot-icon t-orange"><img src="img/i-parking.webp" alt="Иконка: машино-место" width="480" height="480" loading="lazy"></div>
+        <div class="lot-body">
+          <div class="lot-top"><span>Чистопольская, 20 · октябрь</span><span class="pill work">Продаём</span></div>
+          <dl class="proto">
+            <div><dt>Выиграно лотов</dt><dd>20</dd></div>
+            <div><dt>Машино-места</dt><dd>~600 тыс. → план 900 тыс.</dd></div>
+            <div><dt>Двушки</dt><dd>~7 млн ₽</dd></div>
+            <div><dt>Трёшка</dt><dd>отказались выше 8,4 млн</dd></div>
+          </dl>
+        </div>
+      </article>
+      <article class="lot rv">
+        <div class="lot-img lot-icon t-green"><img src="img/s-growth.webp" alt="Иконка: дом" width="480" height="480" loading="lazy"></div>
+        <div class="lot-body">
+          <div class="lot-top"><span>Недострой 170 м² · Щедрино</span><span class="pill work">В работе</span></div>
+          <dl class="proto">
+            <div><dt>Покупка</dt><dd>7,5 млн ₽</dd></div>
+            <div><dt>Достройка</dt><dd>~3 млн ₽</dd></div>
+            <div><dt>План продажи</dt><dd>~23 млн ₽</dd></div>
+            <div><dt>Формат</dt><dd>партнёрство 50/50</dd></div>
+          </dl>
+        </div>
+      </article>
+    </div>
+    <div class="more-deals">
+      <div class="md rv"><b>5 из 5</b><span>квартир с аукциона в Солманово продано, инвестор в прибыли</span></div>
+      <div class="md rv"><b>12–14</b><span>заявок на лот в Лайково – и квартира с террасой наша</span></div>
+      <div class="md rv"><b>1,5 мес.</b><span>на продажу квартир первого корпуса ЖК «Эдельвейс»</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FILTER -->
+<section>
+  <div class="wrap">
+    <div class="head rv">
+      <p class="eyebrow">Как я выбираю объекты</p>
+      <h2>Я берусь не за всё подряд</h2>
+    </div>
+    <div class="filter">
+      <figure class="filter-photo rv"><img class="photo" src="img/portrait-object.webp" width="800" height="1000" alt="Наталья осматривает квартиру в бетоне" loading="lazy"><figcaption>Лично выезжаю на каждый объект</figcaption></figure>
+      <div class="col yes rv">
+        <h3>Что покупаю</h3>
+        <ul>
+          <li>Новые квартиры от застройщиков-банкротов</li>
+          <li>Объекты без проживающих, с понятной историей</li>
+          <li>Пустые квартиры в бетоне – мы покупаем стены и локацию, а не кухню</li>
+          <li>То, что можно спокойно оформить и быстро продать</li>
+        </ul>
+      </div>
+      <div class="col no rv">
+        <h3>Что обхожу стороной</h3>
+        <ul>
+          <li>Объекты с жильцами</li>
+          <li>Сложные документы и обременения</li>
+          <li>Всё, где деньги могут застрять в сделке на месяцы</li>
+          <li>Лоты, которые дешёвые только на первый взгляд</li>
+        </ul>
+      </div>
+      <p class="motto rv">Я ищу не самый дешёвый объект. Я ищу <span class="accent">понятную сделку.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- TERMS -->
+<section class="soft" id="terms">
+  <div class="wrap terms">
+    <div style="display:grid;gap:24px">
+      <div class="head rv" style="margin:0">
+        <p class="eyebrow">Спокойно и прозрачно</p>
+        <h2>Ваши деньги – под вашим контролем</h2>
+        <p class="lead">Каждую сделку мы разбираем вместе до участия в торгах: объект, расчёт и все шаги. Вы принимаете решение, когда картина полностью понятна.</p>
+      </div>
+      <div class="prices rv">
+        <div class="price"><span>Объект оформляется на вас – договор на ваше имя</span></div>
+        <div class="price"><span>Задаток вносится на счёт электронной площадки, а не мне</span></div>
+        <div class="price"><span>Работаю официально – ИП и ООО</span></div>
+      </div>
+    </div>
+    <div class="faq rv">
+      <details open><summary>Как вы считаете доходность?<i></i></summary><div class="ans"><div><p>До участия я считаю каждый объект: цену входа, расходы и реальную цену продажи по рынку. Это ориентир, а не обещание – итог зависит от цены на торгах и спроса. Поэтому заранее ставим потолок ставки и не идём выше него.</p></div></div></details>
+      <details><summary>Сколько стоит ваша работа?<i></i></summary><div class="ans"><div><p>Зависит от вида торгов, объекта и того, нужен ли полный цикл – до продажи. Всё обсуждаем на первой встрече, до того как вы что-то решите.</p></div></div></details>
+      <details><summary>Что будет, если мы не выиграем торги?<i></i></summary><div class="ans"><div><p>Задаток возвращается проигравшим участникам. А я подберу следующие варианты под ваш бюджет – торги проходят постоянно.</p></div></div></details>
+      <details><summary>Сколько длится одна сделка?<i></i></summary><div class="ans"><div><p>Обычно от одного до трёх месяцев от торгов до продажи. Машино-места и квартиры в ликвидных ЖК уходят быстрее, дома и проекты с достройкой – дольше.</p></div></div></details>
+      <details><summary>На кого оформляется объект?<i></i></summary><div class="ans"><div><p>На того, кто участвует в торгах, – на вас. Вы собственник, я провожу сделку по вашему поручению.</p></div></div></details>
+      <details><summary>Можно купить квартиру для себя?<i></i></summary><div class="ans"><div><p>Да. Помогаю купить жильё дешевле рынка на торгах по банкротству, на городских торгах Москвы, у застройщика и на вторичке. В некоторых случаях можно использовать ипотеку.</p></div></div></details>
+      <details><summary>У меня нет опыта. С чего начать?<i></i></summary><div class="ans"><div><p>С небольшой суммы: участка или машино-места. Так вы увидите весь путь – от заявки до продажи – без большого риска.</p></div></div></details>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section>
+  <div class="wrap">
+    <div class="head rv">
+      <p class="eyebrow">Отзывы</p>
+      <h2>Что говорят инвесторы</h2>
+    </div>
+    <div class="reviews">
+      <figure class="review rv"><blockquote>«Наташа, покупай так, как покупала бы для себя»</blockquote><figcaption><b>Надежда</b><span>начала с участка за 30 тыс. ₽, купила квартиру за 12 млн вместо 14</span></figcaption></figure>
+      <figure class="review rv"><blockquote>«Сделкой доволен!»</blockquote><figcaption><b>Антон</b><span>купил квартиру в Солманово, лот с торгов</span></figcaption></figure>
+      <figure class="review review-more rv"><blockquote>Больше отзывов и видео от инвесторов – в моём Telegram-канале</blockquote><a class="btn btn-ghost" href="https://t.me/Nadobraya77" target="_blank" rel="noopener">Открыть канал <span class="arr">→</span></a></figure>
+    </div>
+  </div>
+</section>
+
+<!-- GUIDE -->
+<section id="guide" style="padding-top:0">
+  <div class="wrap">
+    <div class="guide rv">
+      <div class="guide-cover" aria-hidden="true">
+        <div class="book">
+          <span class="book-tag">Мини-гайд · бесплатно</span>
+          <span class="book-title">Недвижимость с торгов: с чего начать</span>
+          <span class="book-author">Наталья Добрынина</span>
+          <span class="book-dot"></span>
+        </div>
+      </div>
+      <div class="guide-text">
+        <p class="eyebrow">Бесплатный мини-гайд</p>
+        <h2>Как отличить выгодный лот от ловушки</h2>
+        <p class="lead">10 минут чтения – и вы понимаете торги лучше, чем большинство новичков.</p>
+        <ul class="guide-list">
+          <li>5 ошибок, на которых новички теряют деньги</li>
+          <li>Чек-лист из 8 вопросов перед любым лотом</li>
+          <li>С какой суммы реально начать – от 30 тысяч</li>
+          <li>История клиентки: от участка до квартиры за 12 млн вместо 14</li>
+        </ul>
+        <div class="hero-cta">
+          <a class="btn btn-main" href="https://t.me/DobryninaNatalya" target="_blank" rel="noopener">Получить гайд в Telegram <span class="arr">→</span></a>
+        </div>
+        <p class="note">Напишите слово <b class="mono" style="color:var(--ink)">ГАЙД</b> – пришлю его в ответ.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" style="padding-top:clamp(40px,6vw,80px)">
+  <div class="wrap about">
+    <img class="photo about-img rv-img" src="img/portrait-about.webp" width="900" height="1125" alt="Наталья за работой" loading="lazy">
+    <div class="about-text rv">
+      <p class="eyebrow">Обо мне</p>
+      <h2>Наталья Добрынина</h2>
+      <p class="lead">35 лет в бизнесе, 12 из них – в недвижимости. Больше 500 сделок и 100 выкупленных лотов.</p>
+      <p>Я участвую в торгах так, будто покупаю для себя: считаю, проверяю, переживаю за каждый шаг и до последней секунды играю с азартом. Лично выезжаю на объекты – не оцениваю их только по фотографиям.</p>
+      <p>Пока одна сделка идёт, я уже смотрю, где будет следующая. Как в мультике: одну ягодку беру, на другую смотрю, третью примечаю. Так капитал не лежит, а работает.</p>
+      <div class="chips"><span>Торги по банкротству</span><span>Городские торги Москвы</span><span>Флиппинг</span><span>Раздел участков</span><span>Недострой и ИЖС</span></div>
+      <p class="note">А ещё – играю в театре и танцую ритуальный танец после каждой победы на торгах. Об этом – в <a href="https://t.me/Nadobraya77" target="_blank" rel="noopener">Telegram-канале</a>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- APPLY -->
+<section id="apply" style="padding-top:0">
+  <div class="wrap">
+    <div class="apply-box rv">
+      <div class="apply-intro">
+        <p class="eyebrow">Заявка</p>
+        <h2>Расскажите, сколько хотите вложить – я скажу, с чего начать</h2>
+        <p class="lead">Ответьте на три вопроса. Я подберу варианты под ваш бюджет и пришлю расчёт.</p>
+        <img class="avatar" src="img/avatar.webp" width="400" height="400" alt="Наталья Добрынина" loading="lazy">
+      </div>
+      <form class="form" id="lead" novalidate>
+        <fieldset>
+          <legend>Какую сумму рассматриваете?</legend>
+          <div class="opts">
+            <input type="radio" name="budget" id="b1" value="до 1 млн ₽"><label for="b1">до 1 млн ₽</label>
+            <input type="radio" name="budget" id="b2" value="1–3 млн ₽"><label for="b2">1–3 млн ₽</label>
+            <input type="radio" name="budget" id="b3" value="3–7 млн ₽"><label for="b3">3–7 млн ₽</label>
+            <input type="radio" name="budget" id="b4" value="больше 7 млн ₽"><label for="b4">больше 7 млн ₽</label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Какая задача?</legend>
+          <div class="opts">
+            <input type="radio" name="goal" id="g1" value="инвестиция и перепродажа"><label for="g1">Инвестиция</label>
+            <input type="radio" name="goal" id="g2" value="жильё для себя"><label for="g2">Жильё для себя</label>
+            <input type="radio" name="goal" id="g3" value="пока не решил(а)"><label for="g3">Пока не знаю</label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Был ли опыт покупки на торгах?</legend>
+          <div class="opts">
+            <input type="radio" name="exp" id="e1" value="нет"><label for="e1">Нет, впервые</label>
+            <input type="radio" name="exp" id="e2" value="да"><label for="e2">Да, участвовал(а)</label>
+          </div>
+        </fieldset>
+        <div class="row2">
+          <div class="field"><label for="name">Имя</label><input id="name" name="name" autocomplete="name" placeholder="Как к вам обращаться"></div>
+          <div class="field"><label for="contact">Телефон или Telegram</label><input id="contact" name="contact" placeholder="+7… или @username"></div>
+        </div>
+        <p class="err" id="err" hidden></p>
+        <button class="btn btn-main" type="submit">Получить подборку <span class="arr">→</span></button>
+        <p class="note">Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>
+        <div class="done" id="done" hidden>
+          <h3>Почти готово</h3>
+          <p>Скопируйте заявку и отправьте мне в Telegram – отвечу и пришлю варианты.</p>
+          <pre id="msg"></pre>
+          <div class="actions">
+            <button class="btn btn-main" type="button" id="copy">Скопировать заявку</button>
+            <a class="btn btn-ghost" href="https://t.me/DobryninaNatalya" target="_blank" rel="noopener">Открыть Telegram</a>
+          </div>
+          <p class="note">Мой Telegram: <span class="mono">@DobryninaNatalya</span></p>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div><b>Наталья Добрынина</b>Инвестиции в недвижимость с торгов. Москва и Московская область.</div>
+    <div><b>Связаться</b>Telegram: <span class="mono">@DobryninaNatalya</span><br>Канал: <a href="https://t.me/Nadobraya77" target="_blank" rel="noopener">t.me/Nadobraya77</a><br>Instagram: <span class="mono">@nadobraya</span></div>
+    <div><b>Реквизиты</b>ИП Добрынина Н. – ИНН ____________<br>ООО «________» – ИНН ____________</div>
+    <p class="disc">Информация на сайте не является индивидуальной инвестиционной рекомендацией. Приведённые цифры – результаты прошлых сделок и ориентиры; доходность в будущем не гарантируется и зависит от итогов торгов и спроса.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // header shadow
+  var hdr=document.getElementById('hdr');
+  function onScroll(){hdr.classList.toggle('scrolled',scrollY>8)}
+  addEventListener('scroll',onScroll,{passive:true});onScroll();
+
+  // count-up for hero stats (final values are already in the markup)
+  if(!reduce){
+    document.querySelectorAll('[data-count]').forEach(function(el){
+      var end=+el.dataset.count,suf=el.dataset.suffix||'',t0=null,dur=1400;
+      function step(t){if(!t0)t0=t;var p=Math.min((t-t0)/dur,1),e=1-Math.pow(1-p,3);el.textContent=Math.round(end*e)+suf;if(p<1)requestAnimationFrame(step)}
+      setTimeout(function(){requestAnimationFrame(step)},700);
+    });
+  }
+
+  // auction price ticker on the hero card
+  var bid=document.getElementById('bid');
+  if(bid&&!reduce){
+    var steps=[11400000,11600000,11800000,12000000],i=0;
+    function fmt(n){return n.toLocaleString('ru-RU').replace(/,/g,' ')}
+    function tick(){
+      var target=steps[i%steps.length],from=i? steps[(i-1)%steps.length]:11200000,t0=null;
+      if(target<from){from=target}
+      function a(t){if(!t0)t0=t;var p=Math.min((t-t0)/700,1);bid.textContent=fmt(Math.round((from+(target-from)*p)/10000)*10000);if(p<1)requestAnimationFrame(a)}
+      requestAnimationFrame(a);i++;
+      setTimeout(tick,i%steps.length===0?4200:1500);
+    }
+    setTimeout(tick,1500);
+  }
+
+  // fallback reveal where CSS scroll timelines are unsupported: content stays visible, only a light lift plays
+  if(!CSS.supports||!CSS.supports('animation-timeline: view()')){
+    if('IntersectionObserver' in window&&!reduce){
+      var io=new IntersectionObserver(function(es){es.forEach(function(e){
+        if(e.isIntersecting){e.target.animate([{transform:'translateY(24px)'},{transform:'none'}],{duration:700,easing:'cubic-bezier(.2,.8,.2,1)'});io.unobserve(e.target)}
+      })},{rootMargin:'0px 0px -8% 0px'});
+      document.querySelectorAll('.rv').forEach(function(el){if(el.getBoundingClientRect().top>innerHeight)io.observe(el)});
+    }
+  }
+
+
+  // house-line backdrop with scroll parallax
+  (function(){
+    var town=document.getElementById('town'); if(!town) return;
+    var seed=7; function rnd(){seed=(seed*16807)%2147483647;return (seed-1)/2147483646}
+    function street(width,H){
+      var d='',x=0,base=H-2;
+      d+='M0 '+base+'H'+width;
+      while(x<width-60){
+        var t=rnd(),w,h;
+        if(t<.5){ // house with gable roof
+          w=60+rnd()*50;h=34+rnd()*26;var r=18+rnd()*14;
+          d+='M'+x+' '+base+'V'+(base-h)+'L'+(x+w/2)+' '+(base-h-r)+'L'+(x+w)+' '+(base-h)+'V'+base;
+          d+='M'+(x+w/2-7)+' '+base+'v-18h14v18';
+          d+='M'+(x+10)+' '+(base-h+10)+'h12v10h-12z';
+          d+='M'+(x+w-22)+' '+(base-h+10)+'h12v10h-12z';
+          if(rnd()<.5) d+='M'+(x+w*.72)+' '+(base-h-r*.45)+'v-'+(r*.6)+'h8v'+(r*.3);
+        } else if(t<.78){ // apartment block
+          w=56+rnd()*40;h=90+rnd()*70;
+          d+='M'+x+' '+base+'V'+(base-h)+'H'+(x+w)+'V'+base;
+          for(var yy=base-h+14;yy<base-16;yy+=18){d+='M'+(x+10)+' '+yy+'H'+(x+w-10)}
+          for(var xx=x+w/3;xx<x+w-4;xx+=w/3){d+='M'+xx+' '+(base-h+8)+'V'+(base-12)}
+        } else { // pine
+          w=34;h=40+rnd()*30;
+          d+='M'+(x+w/2)+' '+base+'v-8M'+x+' '+(base-8)+'L'+(x+w/2)+' '+(base-8-h)+'L'+(x+w)+' '+(base-8)+'Z';
+          d+='M'+(x+5)+' '+(base-8-h*.4)+'L'+(x+w/2)+' '+(base-8-h*.9)+'L'+(x+w-5)+' '+(base-8-h*.4);
+        }
+        x+=w+14+rnd()*30;
+      }
+      return '<svg viewBox="0 0 '+width+' '+H+'" preserveAspectRatio="xMinYMax meet"><path pathLength="1" d="'+d+'"/></svg>';
+    }
+    var rows=[{c:'r1',top:'14%',h:170,k:.12},{c:'r2',top:'52%',h:200,k:-.08},{c:'r3',top:'86%',h:150,k:.05}];
+    rows.forEach(function(r){var el=document.createElement('div');el.className='row '+r.c;el.style.top=r.top;el.style.setProperty('--h',r.h+'px');el.innerHTML=street(3600,r.h)+street(3600,r.h);el.style.transform='translateX(-600px)';town.append(el);r.el=el});
+    if(reduce) return;
+    var ticking=false;
+    function upd(){ticking=false;var y=scrollY;rows.forEach(function(r){var off=((600+y*r.k*2)%3600+3600)%3600;r.el.style.transform='translate3d('+(-off)+'px,0,0)'})}
+    addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(upd)}},{passive:true});upd();
+  })();
+
+  // form
+  var f=document.getElementById('lead'),err=document.getElementById('err'),done=document.getElementById('done'),msg=document.getElementById('msg');
+  function val(n){var el=f.querySelector('input[name="'+n+'"]:checked');return el?el.value:''}
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    var b=val('budget'),g=val('goal'),x=val('exp'),name=f.elements.name.value.trim(),c=f.elements.contact.value.trim();
+    if(!b||!g){err.textContent='Выберите сумму и задачу – так я смогу подобрать подходящие объекты.';err.hidden=false;return}
+    if(!c){err.textContent='Оставьте телефон или Telegram, чтобы я могла с вами связаться.';err.hidden=false;f.elements.contact.focus();return}
+    err.hidden=true;
+    msg.textContent='Здравствуйте, Наталья! Хочу подобрать объект с торгов.\nБюджет: '+b+'\nЗадача: '+g+(x?'\nОпыт торгов: '+x:'')+'\nИмя: '+(name||'–')+'\nКонтакт: '+c;
+    done.hidden=false;done.scrollIntoView({behavior:reduce?'auto':'smooth',block:'nearest'});
+  });
+  document.getElementById('copy').addEventListener('click',function(){
+    var btn=this,t=msg.textContent;
+    function sel(){var r=document.createRange();r.selectNodeContents(msg);var s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent='Выделено – нажмите Ctrl+C'}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){btn.textContent='Скопировано'},sel)}else sel();
+  });
+})();
+</script>
